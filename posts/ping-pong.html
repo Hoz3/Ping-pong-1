@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Creating a Simple Ping Pong Game in Python using Pygame and Turtle</title>
+    <link rel="stylesheet" href="../style.css">
+</head>
+<body>
+<nav>
+  <a href="../index.html">← Back to Home</a>
+</nav>
+
+<h1>Creating a Simple Ping Pong Game in Python using Pygame and Turtle</h1>
+
+<p>
+  Today, I'll guide you through how to create a straightforward yet fun Ping Pong game using Python. We'll explore two popular libraries: <strong>Pygame</strong> and <strong>Turtle</strong>, and see how easily you can bring a game to life.
+</p>
+
+<h2>Step 1: Installation</h2>
+<p>Begin by installing the libraries using pip:</p>
+
+<pre><code>pip install pygame</code></pre>
+<p><em>(Turtle is included with Python by default.)</em></p>
+
+<h2>Step 2: Creating Ping Pong Game using Turtle</h2>
+<p>We'll start by making a basic version with the built-in turtle library:</p>
+
+<pre><code>
+import turtle
+
+wn = turtle.Screen()
+wn.title("Ping Pong by Hozefa")
+wn.bgcolor("black")
+wn.setup(width=800, height=600)
+
+# Left paddle
+left_paddle = turtle.Turtle()
+left_paddle.speed(0)
+left_paddle.shape("square")
+left_paddle.color("white")
+left_paddle.shapesize(stretch_wid=5, stretch_len=1)
+left_paddle.penup()
+left_paddle.goto(-350, 0)
+
+# Right paddle
+right_paddle = turtle.Turtle()
+right_paddle.speed(0)
+right_paddle.shape("square")
+right_paddle.color("white")
+right_paddle.shapesize(stretch_wid=5, stretch_len=1)
+right_paddle.penup()
+right_paddle.goto(350, 0)
+
+# Ball
+ball = turtle.Turtle()
+ball.speed(0)
+ball.shape("square")
+ball.color("white")
+ball.penup()
+ball.goto(0, 0)
+ball.dx = 0.2
+ball.dy = 0.2
+
+# Paddle movements
+def left_paddle_up():
+    y = left_paddle.ycor()
+    y += 20
+    left_paddle.sety(y)
+
+def left_paddle_down():
+    y = left_paddle.ycor()
+    y -= 20
+    left_paddle.sety(y)
+
+wn.listen()
+wn.onkeypress(left_paddle_up, "w")
+wn.onkeypress(left_paddle_down, "s")
+
+while True:
+    wn.update()
+    ball.setx(ball.xcor() + ball.dx)
+    ball.sety(ball.ycor() + ball.dy)
+
+    if ball.ycor() > 290 or ball.ycor() < -290:
+        ball.dy *= -1
+    if ball.xcor() > 390 or ball.xcor() < -390:
+        ball.goto(0, 0)
+        ball.dx *= -1
+</code></pre>
+
+<h2>Step 3: Creating the Game using Pygame</h2>
+
+<pre><code>
+import pygame
+
+pygame.init()
+
+screen = pygame.display.set_mode((800, 600))
+pygame.display.set_caption('Ping Pong by Hozefa')
+
+white = (255, 255, 255)
+black = (0, 0, 0)
+
+paddle_left = pygame.Rect(10, 250, 10, 100)
+paddle_right = pygame.Rect(780, 250, 10, 100)
+ball = pygame.Rect(390, 290, 20, 20)
+
+ball_speed_x = 5
+ball_speed_y = 5
+
+running = True
+while running:
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+            running = False
+
+    ball.x += ball_speed_x
+    ball.y += ball_speed_y
+
+    if ball.top <= 0 or ball.bottom >= 600:
+        ball_speed_y *= -1
+    if ball.left <= 0 or ball.right >= 800:
+        ball_speed_x *= -1
+
+    keys = pygame.key.get_pressed()
+    if keys[pygame.K_w]:
+        paddle_left.y -= 7
+    if keys[pygame.K_s]:
+        paddle_left.y += 7
+
+    screen.fill(black)
+    pygame.draw.rect(screen, white, paddle_left)
+    pygame.draw.rect(screen, white, paddle_right)
+    pygame.draw.ellipse(screen, white, ball)
+
+    pygame.display.flip()
+    pygame.time.Clock().tick(60)
+
+pygame.quit()
+</code></pre>
+
+<h2>Step 4: Game Screenshot</h2>
+
+<img src="../assets/ping-pong.jpg" alt="Ping Pong Game">
+
+</body>
+</html>
